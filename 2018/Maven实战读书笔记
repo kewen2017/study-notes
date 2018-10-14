@@ -1,0 +1,25 @@
+1.maven-surefire-plugin  这个是maven最重要的单元测试插件，通过它与JUnit/TestNG等等框架集成，并生成测试报告。
+
+2.POM （Project Object Model 项目对象模型）
+
+3.不声明groupId和version，将自动集成父模块中定义的值
+
+4.maven-surefire-plugin的test目标与maven的生命周期test绑定， 这是一个插件内置的绑定。
+
+5.maven-surefire-plugin的test目标会自动执行测试源码路径（默认为src/test/java/）下所有匹配的代码：
+**/Test*.java
+**/*Test.java
+**/*TestCase.java
+不需要额外定义testSuite（测试集合）来聚合testCase（测试用例）
+
+6.mvn clean install -DskipTests   这个skipTests参数控制跳过了单元测试。它与maven.test.skip=true的区别在于maven.test.skip同时控制了maven-compiler-plugin和maven-surfire-plugin两个插件的行为，maven.test.skip不仅跳过了测试，也跳过了测试代码的编译。
+
+7.可以用test参数指定想到执行的某一个测试类   -Dtest=xxxxxx,xxx,xxxx,xxx*xxxx   可以用逗号隔开多个想要执行的测试类，可以用通配符*（找不到指定名字的测试类maven会报错）
+
+8.可以通过<include>标签执行额外的测试类， 可以通过<exclude>标签排除不想执行的某个或者某些测试类。
+
+9.maven-surefire-plugin可以生成一份简单的测试报告，还有一份XML格式报告供各种工具解读（例如Eclipse）
+
+10.代码测试覆盖率插件cobertura-maven-plugin： cobertura是一个优秀的开源测试覆盖率统计工具，maven通过cobertura-maven-plugin插件实现集成：mvn cobertura:cobertura 执行生成报告。（默认路径target/site/cobertura）
+
+11.重用测试代码，对测试框架进行打包发布，实现项目内的重用是一个优秀的实践思路。maven-jar-plugin有两个目标：分别是jar和test-jar，前者通过Maven的内置绑定在default生命周期的package阶段运行，行为就是给主代码打包。后者并没有内置绑定，所以需要打包发布的时候需要声明<goal>test-jar</goal>，就可以在test目标执行时打出我们要的测试jar包。
